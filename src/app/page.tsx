@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Navbar from "@/components/custom/navbar";
 import WeatherCard from "@/components/custom/weather-card";
 import ChartComponent from "@/components/custom/chart-component";
@@ -16,18 +17,20 @@ import {
   Globe,
   Filter,
   ChevronDown,
+  Database,
+  Calendar,
 } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [selectedCountry, setSelectedCountry] = useState("all");
+  const [selectedCountry, setSelectedCountry] = useState("us");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Países com histórico de chuvas de granizo
   const countriesWithHail = [
     { code: "all", name: "Todos os Países", flag: "🌍" },
-    { code: "br", name: "Brasil", flag: "🇧🇷" },
     { code: "us", name: "Estados Unidos", flag: "🇺🇸" },
+    { code: "br", name: "Brasil", flag: "🇧🇷" },
     { code: "ar", name: "Argentina", flag: "🇦🇷" },
     { code: "au", name: "Austrália", flag: "🇦🇺" },
     { code: "cn", name: "China", flag: "🇨🇳" },
@@ -36,10 +39,144 @@ export default function Home() {
     { code: "ca", name: "Canadá", flag: "🇨🇦" },
   ];
 
-  // Áreas de monitoramento com dados mock
+  // Áreas de monitoramento nos Estados Unidos (expandido)
   const monitoringAreas = [
+    // Estados Unidos - Tornado Alley e regiões críticas
     {
       id: 1,
+      name: "Oklahoma City, OK",
+      country: "us",
+      status: "high",
+      hailProbability: 92,
+      lastUpdate: "Há 3 min",
+      temperature: 29,
+      windSpeed: 68,
+      hailSize: "Golf Ball (4.5cm)",
+    },
+    {
+      id: 2,
+      name: "Dallas-Fort Worth, TX",
+      country: "us",
+      status: "high",
+      hailProbability: 88,
+      lastUpdate: "Há 5 min",
+      temperature: 31,
+      windSpeed: 62,
+      hailSize: "Baseball (7cm)",
+    },
+    {
+      id: 3,
+      name: "Kansas City, KS",
+      country: "us",
+      status: "high",
+      hailProbability: 85,
+      lastUpdate: "Há 7 min",
+      temperature: 27,
+      windSpeed: 58,
+      hailSize: "Tennis Ball (6cm)",
+    },
+    {
+      id: 4,
+      name: "Denver, CO",
+      country: "us",
+      status: "medium",
+      hailProbability: 74,
+      lastUpdate: "Há 10 min",
+      temperature: 24,
+      windSpeed: 52,
+      hailSize: "Ping Pong (4cm)",
+    },
+    {
+      id: 5,
+      name: "Omaha, NE",
+      country: "us",
+      status: "medium",
+      hailProbability: 68,
+      lastUpdate: "Há 12 min",
+      temperature: 26,
+      windSpeed: 48,
+      hailSize: "Marble (2cm)",
+    },
+    {
+      id: 6,
+      name: "Wichita, KS",
+      country: "us",
+      status: "high",
+      hailProbability: 81,
+      lastUpdate: "Há 8 min",
+      temperature: 28,
+      windSpeed: 55,
+      hailSize: "Golf Ball (4.5cm)",
+    },
+    {
+      id: 7,
+      name: "Amarillo, TX",
+      country: "us",
+      status: "medium",
+      hailProbability: 71,
+      lastUpdate: "Há 15 min",
+      temperature: 30,
+      windSpeed: 50,
+      hailSize: "Pea (1cm)",
+    },
+    {
+      id: 8,
+      name: "Tulsa, OK",
+      country: "us",
+      status: "high",
+      hailProbability: 79,
+      lastUpdate: "Há 9 min",
+      temperature: 28,
+      windSpeed: 60,
+      hailSize: "Walnut (3cm)",
+    },
+    {
+      id: 9,
+      name: "Colorado Springs, CO",
+      country: "us",
+      status: "medium",
+      hailProbability: 65,
+      lastUpdate: "Há 18 min",
+      temperature: 23,
+      windSpeed: 45,
+      hailSize: "Marble (2cm)",
+    },
+    {
+      id: 10,
+      name: "Lubbock, TX",
+      country: "us",
+      status: "medium",
+      hailProbability: 70,
+      lastUpdate: "Há 14 min",
+      temperature: 32,
+      windSpeed: 47,
+      hailSize: "Pea (1cm)",
+    },
+    {
+      id: 11,
+      name: "Topeka, KS",
+      country: "us",
+      status: "high",
+      hailProbability: 83,
+      lastUpdate: "Há 6 min",
+      temperature: 27,
+      windSpeed: 56,
+      hailSize: "Golf Ball (4.5cm)",
+    },
+    {
+      id: 12,
+      name: "Sioux Falls, SD",
+      country: "us",
+      status: "low",
+      hailProbability: 42,
+      lastUpdate: "Há 25 min",
+      temperature: 22,
+      windSpeed: 35,
+      hailSize: "Pea (1cm)",
+    },
+    // Brasil
+    {
+      id: 13,
       name: "São Paulo - Centro",
       country: "br",
       status: "high",
@@ -47,19 +184,22 @@ export default function Home() {
       lastUpdate: "Há 5 min",
       temperature: 24,
       windSpeed: 45,
+      hailSize: "Marble (2cm)",
     },
     {
-      id: 2,
-      name: "Texas - Dallas",
-      country: "us",
+      id: 14,
+      name: "Porto Alegre, RS",
+      country: "br",
       status: "medium",
-      hailProbability: 62,
-      lastUpdate: "Há 12 min",
-      temperature: 28,
-      windSpeed: 38,
+      hailProbability: 67,
+      lastUpdate: "Há 16 min",
+      temperature: 21,
+      windSpeed: 42,
+      hailSize: "Pea (1cm)",
     },
+    // Argentina
     {
-      id: 3,
+      id: 15,
       name: "Buenos Aires - Centro",
       country: "ar",
       status: "high",
@@ -67,9 +207,11 @@ export default function Home() {
       lastUpdate: "Há 8 min",
       temperature: 22,
       windSpeed: 52,
+      hailSize: "Walnut (3cm)",
     },
+    // Austrália
     {
-      id: 4,
+      id: 16,
       name: "Sydney - CBD",
       country: "au",
       status: "low",
@@ -77,9 +219,11 @@ export default function Home() {
       lastUpdate: "Há 20 min",
       temperature: 19,
       windSpeed: 18,
+      hailSize: "Pea (1cm)",
     },
+    // China
     {
-      id: 5,
+      id: 17,
       name: "Beijing - Chaoyang",
       country: "cn",
       status: "medium",
@@ -87,9 +231,11 @@ export default function Home() {
       lastUpdate: "Há 15 min",
       temperature: 26,
       windSpeed: 32,
+      hailSize: "Marble (2cm)",
     },
+    // Índia
     {
-      id: 6,
+      id: 18,
       name: "Mumbai - Centro",
       country: "in",
       status: "high",
@@ -97,6 +243,31 @@ export default function Home() {
       lastUpdate: "Há 10 min",
       temperature: 31,
       windSpeed: 41,
+      hailSize: "Walnut (3cm)",
+    },
+    // Canadá
+    {
+      id: 19,
+      name: "Calgary, AB",
+      country: "ca",
+      status: "medium",
+      hailProbability: 63,
+      lastUpdate: "Há 17 min",
+      temperature: 18,
+      windSpeed: 38,
+      hailSize: "Marble (2cm)",
+    },
+    // África do Sul
+    {
+      id: 20,
+      name: "Johannesburg",
+      country: "za",
+      status: "low",
+      hailProbability: 38,
+      lastUpdate: "Há 22 min",
+      temperature: 20,
+      windSpeed: 28,
+      hailSize: "Pea (1cm)",
     },
   ];
 
@@ -177,32 +348,78 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-white via-[#39FF14] to-[#00BFFF] bg-clip-text text-transparent">
-                  Dashboard
+                  HailWatch USA
                 </h1>
                 <p className="text-gray-400 text-sm sm:text-base">
-                  Monitoramento em tempo real de condições climáticas severas
+                  Monitoramento em tempo real de granizo nos Estados Unidos
                 </p>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-[#39FF14]/20 backdrop-blur-sm">
                 <MapPin className="w-4 h-4 text-[#39FF14]" />
-                <span className="text-sm font-medium">São Paulo, BR</span>
+                <span className="text-sm font-medium">
+                  {countriesWithHail.find((c) => c.code === selectedCountry)
+                    ?.name || "Global"}
+                </span>
               </div>
             </div>
           </div>
 
+          {/* Database Access Banner */}
+          <Link href="/historico">
+            <div className="mb-8 p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-[#39FF14]/10 to-[#00BFFF]/10 border border-[#39FF14]/30 backdrop-blur-sm hover:border-[#39FF14]/50 transition-all duration-300 cursor-pointer group">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-xl bg-[#39FF14]/20 group-hover:bg-[#39FF14]/30 transition-all">
+                  <Database className="w-6 h-6 text-[#39FF14]" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="text-lg font-bold text-white">
+                      Banco de Dados Histórico
+                    </h3>
+                    <span className="px-3 py-1 rounded-full bg-[#39FF14]/20 text-[#39FF14] text-xs font-semibold">
+                      NOVO
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-300 mb-3">
+                    Acesse o histórico completo de chuvas de granizo dos últimos 5 anos. 
+                    Dados precisos com data, hora, localização e detalhes completos de cada evento.
+                  </p>
+                  <div className="flex items-center gap-4 text-xs text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      2019-2024
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4" />
+                      8 países monitorados
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Activity className="w-4 h-4" />
+                      Dados em tempo real
+                    </span>
+                  </div>
+                </div>
+                <div className="hidden sm:flex items-center text-[#39FF14] group-hover:translate-x-2 transition-transform">
+                  <ChevronDown className="w-6 h-6 -rotate-90" />
+                </div>
+              </div>
+            </div>
+          </Link>
+
           {/* Alert Banner */}
-          <div className="mb-8 p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-[#39FF14]/10 to-[#00BFFF]/10 border border-[#39FF14]/30 backdrop-blur-sm">
+          <div className="mb-8 p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 backdrop-blur-sm">
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-[#39FF14]/20">
-                <AlertTriangle className="w-6 h-6 text-[#39FF14]" />
+              <div className="p-3 rounded-xl bg-red-500/20">
+                <AlertTriangle className="w-6 h-6 text-red-500" />
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-white mb-1">
-                  Alerta de Tempestade Severa
+                  Alerta Severo - Tornado Alley
                 </h3>
                 <p className="text-sm text-gray-300">
-                  Possibilidade de granizo nas próximas 3 horas. Mantenha-se
-                  informado e tome precauções necessárias.
+                  Condições extremas detectadas em Oklahoma, Kansas e Texas.
+                  Granizo de até 7cm (tamanho de baseball) esperado nas
+                  próximas 2 horas. Procure abrigo imediatamente.
                 </p>
               </div>
             </div>
@@ -212,38 +429,38 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
             <WeatherCard
               title="Temperatura"
-              value="24"
+              value="29"
               unit="°C"
               icon={Cloud}
               trend="up"
-              trendValue="+2°C"
+              trendValue="+3°C"
               color="blue"
             />
             <WeatherCard
               title="Precipitação"
-              value="65"
+              value="85"
               unit="%"
               icon={CloudRain}
               trend="up"
-              trendValue="+15%"
+              trendValue="+25%"
               color="green"
             />
             <WeatherCard
               title="Velocidade do Vento"
-              value="18"
+              value="68"
               unit="km/h"
               icon={Wind}
-              trend="stable"
-              trendValue="0 km/h"
+              trend="up"
+              trendValue="+15 km/h"
               color="white"
             />
             <WeatherCard
               title="Umidade"
-              value="78"
+              value="82"
               unit="%"
               icon={Droplets}
-              trend="down"
-              trendValue="-5%"
+              trend="up"
+              trendValue="+8%"
               color="blue"
             />
           </div>
@@ -263,6 +480,7 @@ export default function Home() {
                     </h3>
                     <p className="text-sm text-gray-400">
                       {filteredAreas.length} área(s) ativa(s)
+                      {selectedCountry === "us" && " nos Estados Unidos"}
                     </p>
                   </div>
                 </div>
@@ -376,6 +594,13 @@ export default function Home() {
                       </div>
                     </div>
 
+                    {/* Hail Size Badge */}
+                    <div className="mb-4 p-2 rounded-lg bg-orange-500/10 border border-orange-500/30">
+                      <p className="text-xs text-orange-400 font-semibold">
+                        Tamanho esperado: {area.hailSize}
+                      </p>
+                    </div>
+
                     {/* Weather Stats */}
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex items-center gap-2 p-2 rounded-lg bg-black/20">
@@ -465,29 +690,41 @@ export default function Home() {
                 <Activity className="w-5 h-5 text-[#39FF14]" />
               </div>
               <h3 className="text-lg font-bold text-white">
-                Atividade Recente
+                Atividade Recente - Estados Unidos
               </h3>
             </div>
 
             <div className="space-y-4">
               {[
                 {
-                  time: "Há 15 min",
-                  event: "Alerta de granizo detectado",
-                  location: "Zona Norte - SP",
+                  time: "Há 3 min",
+                  event: "Granizo severo detectado (Baseball size)",
+                  location: "Dallas-Fort Worth, TX",
                   severity: "high",
                 },
                 {
-                  time: "Há 1 hora",
-                  event: "Tempestade severa registrada",
-                  location: "Centro - SP",
+                  time: "Há 5 min",
+                  event: "Alerta de tornado e granizo",
+                  location: "Oklahoma City, OK",
+                  severity: "high",
+                },
+                {
+                  time: "Há 8 min",
+                  event: "Tempestade severa com granizo",
+                  location: "Kansas City, KS",
+                  severity: "high",
+                },
+                {
+                  time: "Há 12 min",
+                  event: "Condições favoráveis para granizo",
+                  location: "Denver, CO",
                   severity: "medium",
                 },
                 {
-                  time: "Há 2 horas",
-                  event: "Condições climáticas normalizadas",
-                  location: "Zona Sul - SP",
-                  severity: "low",
+                  time: "Há 18 min",
+                  event: "Monitoramento ativo iniciado",
+                  location: "Wichita, KS",
+                  severity: "medium",
                 },
               ].map((activity, index) => (
                 <div
