@@ -5,6 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/custom/navbar";
 import WeatherCard from "@/components/custom/weather-card";
 import ChartComponent from "@/components/custom/chart-component";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Cloud,
   CloudRain,
@@ -19,16 +20,18 @@ import {
   ChevronDown,
   Database,
   Calendar,
+  Shield,
 } from "lucide-react";
 
 export default function Home() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedCountry, setSelectedCountry] = useState("us");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Países com histórico de chuvas de granizo
   const countriesWithHail = [
-    { code: "all", name: "Todos os Países", flag: "🌍" },
+    { code: "all", name: t("monitoring.allCountries"), flag: "🌍" },
     { code: "us", name: "Estados Unidos", flag: "🇺🇸" },
     { code: "br", name: "Brasil", flag: "🇧🇷" },
     { code: "ar", name: "Argentina", flag: "🇦🇷" },
@@ -48,7 +51,7 @@ export default function Home() {
       country: "us",
       status: "high",
       hailProbability: 92,
-      lastUpdate: "Há 3 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "3"),
       temperature: 29,
       windSpeed: 68,
       hailSize: "Golf Ball (4.5cm)",
@@ -59,7 +62,7 @@ export default function Home() {
       country: "us",
       status: "high",
       hailProbability: 88,
-      lastUpdate: "Há 5 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "5"),
       temperature: 31,
       windSpeed: 62,
       hailSize: "Baseball (7cm)",
@@ -70,7 +73,7 @@ export default function Home() {
       country: "us",
       status: "high",
       hailProbability: 85,
-      lastUpdate: "Há 7 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "7"),
       temperature: 27,
       windSpeed: 58,
       hailSize: "Tennis Ball (6cm)",
@@ -81,7 +84,7 @@ export default function Home() {
       country: "us",
       status: "medium",
       hailProbability: 74,
-      lastUpdate: "Há 10 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "10"),
       temperature: 24,
       windSpeed: 52,
       hailSize: "Ping Pong (4cm)",
@@ -92,7 +95,7 @@ export default function Home() {
       country: "us",
       status: "medium",
       hailProbability: 68,
-      lastUpdate: "Há 12 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "12"),
       temperature: 26,
       windSpeed: 48,
       hailSize: "Marble (2cm)",
@@ -103,7 +106,7 @@ export default function Home() {
       country: "us",
       status: "high",
       hailProbability: 81,
-      lastUpdate: "Há 8 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "8"),
       temperature: 28,
       windSpeed: 55,
       hailSize: "Golf Ball (4.5cm)",
@@ -114,7 +117,7 @@ export default function Home() {
       country: "us",
       status: "medium",
       hailProbability: 71,
-      lastUpdate: "Há 15 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "15"),
       temperature: 30,
       windSpeed: 50,
       hailSize: "Pea (1cm)",
@@ -125,7 +128,7 @@ export default function Home() {
       country: "us",
       status: "high",
       hailProbability: 79,
-      lastUpdate: "Há 9 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "9"),
       temperature: 28,
       windSpeed: 60,
       hailSize: "Walnut (3cm)",
@@ -136,7 +139,7 @@ export default function Home() {
       country: "us",
       status: "medium",
       hailProbability: 65,
-      lastUpdate: "Há 18 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "18"),
       temperature: 23,
       windSpeed: 45,
       hailSize: "Marble (2cm)",
@@ -147,7 +150,7 @@ export default function Home() {
       country: "us",
       status: "medium",
       hailProbability: 70,
-      lastUpdate: "Há 14 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "14"),
       temperature: 32,
       windSpeed: 47,
       hailSize: "Pea (1cm)",
@@ -158,7 +161,7 @@ export default function Home() {
       country: "us",
       status: "high",
       hailProbability: 83,
-      lastUpdate: "Há 6 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "6"),
       temperature: 27,
       windSpeed: 56,
       hailSize: "Golf Ball (4.5cm)",
@@ -169,7 +172,7 @@ export default function Home() {
       country: "us",
       status: "low",
       hailProbability: 42,
-      lastUpdate: "Há 25 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "25"),
       temperature: 22,
       windSpeed: 35,
       hailSize: "Pea (1cm)",
@@ -181,7 +184,7 @@ export default function Home() {
       country: "br",
       status: "high",
       hailProbability: 85,
-      lastUpdate: "Há 5 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "5"),
       temperature: 24,
       windSpeed: 45,
       hailSize: "Marble (2cm)",
@@ -192,7 +195,7 @@ export default function Home() {
       country: "br",
       status: "medium",
       hailProbability: 67,
-      lastUpdate: "Há 16 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "16"),
       temperature: 21,
       windSpeed: 42,
       hailSize: "Pea (1cm)",
@@ -204,7 +207,7 @@ export default function Home() {
       country: "ar",
       status: "high",
       hailProbability: 78,
-      lastUpdate: "Há 8 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "8"),
       temperature: 22,
       windSpeed: 52,
       hailSize: "Walnut (3cm)",
@@ -216,7 +219,7 @@ export default function Home() {
       country: "au",
       status: "low",
       hailProbability: 25,
-      lastUpdate: "Há 20 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "20"),
       temperature: 19,
       windSpeed: 18,
       hailSize: "Pea (1cm)",
@@ -228,7 +231,7 @@ export default function Home() {
       country: "cn",
       status: "medium",
       hailProbability: 55,
-      lastUpdate: "Há 15 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "15"),
       temperature: 26,
       windSpeed: 32,
       hailSize: "Marble (2cm)",
@@ -240,7 +243,7 @@ export default function Home() {
       country: "in",
       status: "high",
       hailProbability: 72,
-      lastUpdate: "Há 10 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "10"),
       temperature: 31,
       windSpeed: 41,
       hailSize: "Walnut (3cm)",
@@ -252,7 +255,7 @@ export default function Home() {
       country: "ca",
       status: "medium",
       hailProbability: 63,
-      lastUpdate: "Há 17 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "17"),
       temperature: 18,
       windSpeed: 38,
       hailSize: "Marble (2cm)",
@@ -264,7 +267,7 @@ export default function Home() {
       country: "za",
       status: "low",
       hailProbability: 38,
-      lastUpdate: "Há 22 min",
+      lastUpdate: t("time.minutesAgo").replace("{0}", "22"),
       temperature: 20,
       windSpeed: 28,
       hailSize: "Pea (1cm)",
@@ -314,11 +317,11 @@ export default function Home() {
   const getStatusText = (status: string) => {
     switch (status) {
       case "high":
-        return "Risco Alto";
+        return t("monitoring.highRisk");
       case "medium":
-        return "Risco Médio";
+        return t("monitoring.mediumRisk");
       case "low":
-        return "Risco Baixo";
+        return t("monitoring.lowRisk");
       default:
         return "Normal";
     }
@@ -348,10 +351,10 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 bg-gradient-to-r from-white via-[#39FF14] to-[#00BFFF] bg-clip-text text-transparent">
-                  HailWatch USA
+                  {t("header.title")}
                 </h1>
                 <p className="text-gray-400 text-sm sm:text-base">
-                  Monitoramento em tempo real de granizo nos Estados Unidos
+                  {t("header.subtitle")}
                 </p>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-[#39FF14]/20 backdrop-blur-sm">
@@ -374,28 +377,27 @@ export default function Home() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-lg font-bold text-white">
-                      Banco de Dados Histórico
+                      {t("database.title")}
                     </h3>
                     <span className="px-3 py-1 rounded-full bg-[#39FF14]/20 text-[#39FF14] text-xs font-semibold">
-                      NOVO
+                      {t("database.badge")}
                     </span>
                   </div>
                   <p className="text-sm text-gray-300 mb-3">
-                    Acesse o histórico completo de chuvas de granizo dos últimos 5 anos. 
-                    Dados precisos com data, hora, localização e detalhes completos de cada evento.
+                    {t("database.description")}
                   </p>
                   <div className="flex items-center gap-4 text-xs text-gray-400">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      2019-2024
+                      {t("database.years")}
                     </span>
                     <span className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
-                      8 países monitorados
+                      {t("database.countries")}
                     </span>
                     <span className="flex items-center gap-1">
                       <Activity className="w-4 h-4" />
-                      Dados em tempo real
+                      {t("database.realtime")}
                     </span>
                   </div>
                 </div>
@@ -414,12 +416,10 @@ export default function Home() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-white mb-1">
-                  Alerta Severo - Tornado Alley
+                  {t("alert.title")}
                 </h3>
                 <p className="text-sm text-gray-300">
-                  Condições extremas detectadas em Oklahoma, Kansas e Texas.
-                  Granizo de até 7cm (tamanho de baseball) esperado nas
-                  próximas 2 horas. Procure abrigo imediatamente.
+                  {t("alert.description")}
                 </p>
               </div>
             </div>
@@ -428,7 +428,7 @@ export default function Home() {
           {/* Weather Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
             <WeatherCard
-              title="Temperatura"
+              title={t("cards.temperature")}
               value="29"
               unit="°C"
               icon={Cloud}
@@ -437,7 +437,7 @@ export default function Home() {
               color="blue"
             />
             <WeatherCard
-              title="Precipitação"
+              title={t("cards.precipitation")}
               value="85"
               unit="%"
               icon={CloudRain}
@@ -446,7 +446,7 @@ export default function Home() {
               color="green"
             />
             <WeatherCard
-              title="Velocidade do Vento"
+              title={t("cards.windSpeed")}
               value="68"
               unit="km/h"
               icon={Wind}
@@ -455,7 +455,7 @@ export default function Home() {
               color="white"
             />
             <WeatherCard
-              title="Umidade"
+              title={t("cards.humidity")}
               value="82"
               unit="%"
               icon={Droplets}
@@ -476,11 +476,11 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white">
-                      Áreas de Monitoramento
+                      {t("monitoring.title")}
                     </h3>
                     <p className="text-sm text-gray-400">
-                      {filteredAreas.length} área(s) ativa(s)
-                      {selectedCountry === "us" && " nos Estados Unidos"}
+                      {filteredAreas.length} {t("monitoring.areas")}
+                      {selectedCountry === "us" && ` ${t("monitoring.inUS")}`}
                     </p>
                   </div>
                 </div>
@@ -496,7 +496,7 @@ export default function Home() {
                       {countriesWithHail.find((c) => c.code === selectedCountry)
                         ?.flag || "🌍"}{" "}
                       {countriesWithHail.find((c) => c.code === selectedCountry)
-                        ?.name || "Filtrar"}
+                        ?.name || t("monitoring.filter")}
                     </span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform duration-300 ${
@@ -558,7 +558,7 @@ export default function Home() {
                           </h4>
                         </div>
                         <p className="text-xs text-gray-400">
-                          Atualizado {area.lastUpdate}
+                          {t("monitoring.updatedAgo")} {area.lastUpdate}
                         </p>
                       </div>
                       <div
@@ -574,7 +574,7 @@ export default function Home() {
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs text-gray-400">
-                          Probabilidade de Granizo
+                          {t("monitoring.hailProbability")}
                         </span>
                         <span className="text-sm font-bold text-white">
                           {area.hailProbability}%
@@ -597,7 +597,7 @@ export default function Home() {
                     {/* Hail Size Badge */}
                     <div className="mb-4 p-2 rounded-lg bg-orange-500/10 border border-orange-500/30">
                       <p className="text-xs text-orange-400 font-semibold">
-                        Tamanho esperado: {area.hailSize}
+                        {t("monitoring.expectedSize")}: {area.hailSize}
                       </p>
                     </div>
 
@@ -606,7 +606,7 @@ export default function Home() {
                       <div className="flex items-center gap-2 p-2 rounded-lg bg-black/20">
                         <Cloud className="w-4 h-4 text-[#00BFFF]" />
                         <div>
-                          <p className="text-xs text-gray-400">Temp.</p>
+                          <p className="text-xs text-gray-400">{t("monitoring.temp")}</p>
                           <p className="text-sm font-semibold text-white">
                             {area.temperature}°C
                           </p>
@@ -615,7 +615,7 @@ export default function Home() {
                       <div className="flex items-center gap-2 p-2 rounded-lg bg-black/20">
                         <Wind className="w-4 h-4 text-[#39FF14]" />
                         <div>
-                          <p className="text-xs text-gray-400">Vento</p>
+                          <p className="text-xs text-gray-400">{t("monitoring.wind")}</p>
                           <p className="text-sm font-semibold text-white">
                             {area.windSpeed} km/h
                           </p>
@@ -631,7 +631,7 @@ export default function Home() {
                 <div className="text-center py-12">
                   <Globe className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                   <p className="text-gray-400">
-                    Nenhuma área de monitoramento encontrada para este país.
+                    {t("monitoring.noAreas")}
                   </p>
                 </div>
               )}
@@ -648,9 +648,9 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white">
-                    Temperatura (24h)
+                    {t("charts.temperature24h")}
                   </h3>
-                  <p className="text-sm text-gray-400">Previsão para hoje</p>
+                  <p className="text-sm text-gray-400">{t("charts.forecastToday")}</p>
                 </div>
               </div>
               <ChartComponent
@@ -669,9 +669,9 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white">
-                    Precipitação (7 dias)
+                    {t("charts.precipitation7d")}
                   </h3>
-                  <p className="text-sm text-gray-400">Histórico semanal</p>
+                  <p className="text-sm text-gray-400">{t("charts.weeklyHistory")}</p>
                 </div>
               </div>
               <ChartComponent
@@ -690,39 +690,39 @@ export default function Home() {
                 <Activity className="w-5 h-5 text-[#39FF14]" />
               </div>
               <h3 className="text-lg font-bold text-white">
-                Atividade Recente - Estados Unidos
+                {t("activity.title")}
               </h3>
             </div>
 
             <div className="space-y-4">
               {[
                 {
-                  time: "Há 3 min",
-                  event: "Granizo severo detectado (Baseball size)",
+                  time: t("time.minutesAgo").replace("{0}", "3"),
+                  event: t("activity.events.severeHail"),
                   location: "Dallas-Fort Worth, TX",
                   severity: "high",
                 },
                 {
-                  time: "Há 5 min",
-                  event: "Alerta de tornado e granizo",
+                  time: t("time.minutesAgo").replace("{0}", "5"),
+                  event: t("activity.events.tornadoAlert"),
                   location: "Oklahoma City, OK",
                   severity: "high",
                 },
                 {
-                  time: "Há 8 min",
-                  event: "Tempestade severa com granizo",
+                  time: t("time.minutesAgo").replace("{0}", "8"),
+                  event: t("activity.events.severeStorm"),
                   location: "Kansas City, KS",
                   severity: "high",
                 },
                 {
-                  time: "Há 12 min",
-                  event: "Condições favoráveis para granizo",
+                  time: t("time.minutesAgo").replace("{0}", "12"),
+                  event: t("activity.events.favorableConditions"),
                   location: "Denver, CO",
                   severity: "medium",
                 },
                 {
-                  time: "Há 18 min",
-                  event: "Monitoramento ativo iniciado",
+                  time: t("time.minutesAgo").replace("{0}", "18"),
+                  event: t("activity.events.monitoringStarted"),
                   location: "Wichita, KS",
                   severity: "medium",
                 },
@@ -754,6 +754,17 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Disclaimer Footer */}
+          <div className="mt-8 text-center">
+            <Link
+              href="/disclaimer"
+              className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#39FF14] transition-colors"
+            >
+              <Shield className="w-4 h-4" />
+              <span>Aviso Legal e Isenção de Responsabilidade</span>
+            </Link>
           </div>
         </div>
       </main>

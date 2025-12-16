@@ -5,6 +5,7 @@ import Script from "next/script";
 import "./globals.css";
 // Import all available fonts for AI usage
 import "../lib/fonts";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -12,8 +13,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "HailWatch - Premium Weather Monitoring",
-  description: "Monitor severe weather conditions with real-time hail tracking and alerts",
+  title: "HAIL WATCH - Professional Roof Damage Assessment",
+  description: "Professional hail damage assessment and roof repair estimates for roofing contractors",
 };
 
 export default function RootLayout({
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-inter antialiased bg-[#0D0D0D] text-white`}
       >
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

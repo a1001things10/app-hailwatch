@@ -3,8 +3,23 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-// Criar cliente apenas se as credenciais estiverem disponíveis
-export const supabase = supabaseUrl && supabaseAnonKey 
+// Validar se as credenciais são válidas (não vazias e com formato correto)
+const isValidUrl = (url: string) => {
+  if (!url || url.trim() === '') return false
+  try {
+    new URL(url)
+    return url.includes('supabase.co')
+  } catch {
+    return false
+  }
+}
+
+const isValidKey = (key: string) => {
+  return key && key.trim() !== '' && key.length > 20
+}
+
+// Criar cliente apenas se as credenciais forem válidas
+export const supabase = isValidUrl(supabaseUrl) && isValidKey(supabaseAnonKey)
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null
 
@@ -52,97 +67,219 @@ export async function getHailHistory(filters?: {
   city?: string
 }) {
   if (!supabase) {
-    throw new Error('Supabase não está configurado. Configure suas credenciais nas configurações do projeto.')
+    throw new Error('SUPABASE_NOT_CONFIGURED')
   }
 
-  let query = supabase
-    .from('hail_history')
-    .select('*')
-    .order('date', { ascending: false })
+  try {
+    let query = supabase
+      .from('hail_history')
+      .select('*')
+      .order('date', { ascending: false })
 
-  if (filters?.country && filters.country !== 'all') {
-    query = query.eq('country', filters.country)
+    if (filters?.country && filters.country !== 'all') {
+      query = query.eq('country', filters.country)
+    }
+
+    if (filters?.startDate) {
+      query = query.gte('date', filters.startDate)
+    }
+
+    if (filters?.endDate) {
+      query = query.lte('date', filters.endDate)
+    }
+
+    if (filters?.minSeverity) {
+      query = query.gte('severity_index', filters.minSeverity)
+    }
+
+    if (filters?.city) {
+      query = query.ilike('city', `%${filters.city}%`)
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+      console.error('Erro ao buscar histórico:', error)
+      
+      // Erro de tabela não encontrada
+      if (error.code === 'PGRST205' || error.message.includes('table') || error.message.includes('schema cache')) {
+        throw new Error('TABLE_NOT_FOUND')
+      }
+      
+      // Erro de autenticação
+      if (error.message.includes('JWT') || error.message.includes('API key') || error.message.includes('apikey')) {
+        throw new Error('INVALID_CREDENTIALS')
+      }
+      
+      throw new Error('DATABASE_ERROR')
+    }
+    
+    return data as HailHistory[]
+  } catch (error: any) {
+    console.error('Erro na função getHailHistory:', error)
+    
+    // Propagar erros conhecidos
+    if (error.message === 'TABLE_NOT_FOUND' || error.message === 'INVALID_CREDENTIALS' || error.message === 'DATABASE_ERROR') {
+      throw error
+    }
+    
+    // Erro de rede/fetch
+    if (error.message.includes('fetch') || error.message.includes('network')) {
+      throw new Error('NETWORK_ERROR')
+    }
+    
+    throw new Error('UNKNOWN_ERROR')
   }
-
-  if (filters?.startDate) {
-    query = query.gte('date', filters.startDate)
-  }
-
-  if (filters?.endDate) {
-    query = query.lte('date', filters.endDate)
-  }
-
-  if (filters?.minSeverity) {
-    query = query.gte('severity_index', filters.minSeverity)
-  }
-
-  if (filters?.city) {
-    query = query.ilike('city', `%${filters.city}%`)
-  }
-
-  const { data, error } = await query
-
-  if (error) throw error
-  return data as HailHistory[]
 }
 
 export async function getHailCategories() {
   if (!supabase) {
-    throw new Error('Supabase não está configurado. Configure suas credenciais nas configurações do projeto.')
+    throw new Error('SUPABASE_NOT_CONFIGURED')
   }
 
-  const { data, error } = await supabase
-    .from('hail_categories')
-    .select('*')
-    .order('size_min_mm', { ascending: true })
+  try {
+    const { data, error } = await supabase
+      .from('hail_categories')
+      .select('*')
+      .order('size_min_mm', { ascending: true })
 
-  if (error) throw error
-  return data as HailCategory[]
+    if (error) {
+      console.error('Erro ao buscar categorias:', error)
+      
+      if (error.code === 'PGRST205' || error.message.includes('table') || error.message.includes('schema cache')) {
+        throw new Error('TABLE_NOT_FOUND')
+      }
+      
+      if (error.message.includes('JWT') || error.message.includes('API key') || error.message.includes('apikey')) {
+        throw new Error('INVALID_CREDENTIALS')
+      }
+      
+      throw new Error('DATABASE_ERROR')
+    }
+    
+    return data as HailCategory[]
+  } catch (error: any) {
+    console.error('Erro na função getHailCategories:', error)
+    
+    if (error.message === 'TABLE_NOT_FOUND' || error.message === 'INVALID_CREDENTIALS' || error.message === 'DATABASE_ERROR') {
+      throw error
+    }
+    
+    if (error.message.includes('fetch') || error.message.includes('network')) {
+      throw new Error('NETWORK_ERROR')
+    }
+    
+    throw new Error('UNKNOWN_ERROR')
+  }
 }
 
 export async function insertHailEvent(event: Omit<HailHistory, 'id' | 'created_at' | 'updated_at'>) {
   if (!supabase) {
-    throw new Error('Supabase não está configurado. Configure suas credenciais nas configurações do projeto.')
+    throw new Error('SUPABASE_NOT_CONFIGURED')
   }
 
-  const { data, error } = await supabase
-    .from('hail_history')
-    .insert([event])
-    .select()
+  try {
+    const { data, error } = await supabase
+      .from('hail_history')
+      .insert([event])
+      .select()
 
-  if (error) throw error
-  return data[0] as HailHistory
+    if (error) {
+      console.error('Erro ao inserir evento:', error)
+      
+      if (error.code === 'PGRST205' || error.message.includes('table') || error.message.includes('schema cache')) {
+        throw new Error('TABLE_NOT_FOUND')
+      }
+      
+      if (error.message.includes('JWT') || error.message.includes('API key') || error.message.includes('apikey')) {
+        throw new Error('INVALID_CREDENTIALS')
+      }
+      
+      throw new Error('DATABASE_ERROR')
+    }
+    
+    return data[0] as HailHistory
+  } catch (error: any) {
+    console.error('Erro na função insertHailEvent:', error)
+    
+    if (error.message === 'TABLE_NOT_FOUND' || error.message === 'INVALID_CREDENTIALS' || error.message === 'DATABASE_ERROR') {
+      throw error
+    }
+    
+    if (error.message.includes('fetch') || error.message.includes('network')) {
+      throw new Error('NETWORK_ERROR')
+    }
+    
+    throw new Error('UNKNOWN_ERROR')
+  }
 }
 
 export async function getHailStatistics(country?: string) {
   if (!supabase) {
-    throw new Error('Supabase não está configurado. Configure suas credenciais nas configurações do projeto.')
+    throw new Error('SUPABASE_NOT_CONFIGURED')
   }
 
-  let query = supabase
-    .from('hail_history')
-    .select('*')
+  try {
+    let query = supabase
+      .from('hail_history')
+      .select('*')
 
-  if (country && country !== 'all') {
-    query = query.eq('country', country)
-  }
+    if (country && country !== 'all') {
+      query = query.eq('country', country)
+    }
 
-  const { data, error } = await query
+    const { data, error } = await query
 
-  if (error) throw error
+    if (error) {
+      console.error('Erro ao buscar estatísticas:', error)
+      
+      if (error.code === 'PGRST205' || error.message.includes('table') || error.message.includes('schema cache')) {
+        throw new Error('TABLE_NOT_FOUND')
+      }
+      
+      if (error.message.includes('JWT') || error.message.includes('API key') || error.message.includes('apikey')) {
+        throw new Error('INVALID_CREDENTIALS')
+      }
+      
+      throw new Error('DATABASE_ERROR')
+    }
 
-  const events = data as HailHistory[]
-  
-  return {
-    totalEvents: events.length,
-    averageSeverity: events.reduce((acc, e) => acc + e.severity_index, 0) / events.length,
-    largestHail: Math.max(...events.map(e => e.hail_size_mm)),
-    mostAffectedCity: getMostFrequent(events.map(e => e.city)),
-    eventsByYear: groupByYear(events)
+    const events = data as HailHistory[]
+    
+    if (events.length === 0) {
+      return {
+        totalEvents: 0,
+        averageSeverity: 0,
+        largestHail: 0,
+        mostAffectedCity: '-',
+        eventsByYear: {}
+      }
+    }
+    
+    return {
+      totalEvents: events.length,
+      averageSeverity: events.reduce((acc, e) => acc + e.severity_index, 0) / events.length,
+      largestHail: Math.max(...events.map(e => e.hail_size_mm)),
+      mostAffectedCity: getMostFrequent(events.map(e => e.city)),
+      eventsByYear: groupByYear(events)
+    }
+  } catch (error: any) {
+    console.error('Erro na função getHailStatistics:', error)
+    
+    if (error.message === 'TABLE_NOT_FOUND' || error.message === 'INVALID_CREDENTIALS' || error.message === 'DATABASE_ERROR') {
+      throw error
+    }
+    
+    if (error.message.includes('fetch') || error.message.includes('network')) {
+      throw new Error('NETWORK_ERROR')
+    }
+    
+    throw new Error('UNKNOWN_ERROR')
   }
 }
 
 function getMostFrequent(arr: string[]): string {
+  if (arr.length === 0) return '-'
   const frequency: Record<string, number> = {}
   arr.forEach(item => {
     frequency[item] = (frequency[item] || 0) + 1
